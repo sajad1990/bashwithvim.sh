@@ -1,0 +1,102 @@
+#!/bin/bash
+
+echo "Welcome to Perscholas!"
+
+# Prompt user for their name
+read -p "Enter your name: " name
+
+echo "Welcome to Perscholas, $name! It's nice to have you here."
+sleep 3
+echo "We are thrilled to have you on board and look forward to working together!"
+
+# Prompt user for inspiration
+read -p "What drives and inspires you? " inspires
+
+echo "Ah, $inspires! I admire your strong drive and motivation. If there's anything I can do to support you or help you achieve your goals, please let me know. I believe in you!"
+
+sleep 3
+
+echo "Let's play a game!"
+
+while true; do
+    play_again="Y"
+
+    # Prompt the user for their favorite color
+    read -p "What is your favorite color? (Type 'quit' to exit) " color
+
+    # Check if the user wants to quit
+    if [ "$color" == "quit" ]; then
+        echo "Exiting the game. Goodbye!"
+        exit
+    fi
+
+    # Prompt the user for their favorite activity
+    read -p "What is your favorite activity? " activity
+
+    # Set the text color based on the user's favorite color
+    case "$color" in
+        "red")
+            color_code="31"  # Red
+            ;;
+        "green")
+            color_code="32"  # Green
+            ;;
+        "blue")
+            color_code="34"  # Blue
+            ;;
+        "yellow")
+            color_code="33"  # Yellow
+            ;;
+        "purple")
+            color_code="35"  # Purple
+            ;;
+        *)
+            color_code="0"  # Default color
+            ;;
+    esac
+
+    while [ "$play_again" == "Y" ]; do
+        # Generate a random number between 1 and 100
+        number=$((1 + RANDOM % 100))
+
+        # Prompt the user to guess the number
+        echo -e "\033[${color_code}mI'm thinking of a number between 1 and 100. Can you guess what it is?\033[0m"
+
+        while true; do
+            read -p "Enter your guess: " guess
+
+            # Check if the user's guess is a valid number
+            if ! [[ "$guess" =~ ^[0-9]+$ ]]; then
+                echo "Invalid input. Please enter a valid number."
+                continue
+            fi
+
+            # Check if the user's guess is correct, too high, or too low
+            if [ "$guess" -gt "$number" ]; then
+                echo "Your guess is too high."
+            elif [ "$guess" -lt "$number" ]; then
+                echo "Your guess is too low."
+            else
+                echo "Congratulations! You guessed the number $number."
+                break
+            fi
+        done
+
+        # Display the user's favorite color and activity
+        echo -e "\033[${color_code}mYour favorite color is $color and your favorite activity is $activity.\033[0m"
+
+        # Check if the user wants to play again
+        read -p "Do you want to play again? (Y/N) " play_again
+
+        # Validate the input for playing again
+        while [[ "${play_again^^}" != "Y" && "${play_again^^}" != "N" ]]; do
+            read -p "Invalid input. Do you want to play again? (Y/N) " play_again
+        done
+    done
+
+    # Check if the user wants to quit the whole program
+    if [ "${play_again^^}" == "N" ]; then
+        echo "Goodbye!"
+        exit
+    fi
+done
